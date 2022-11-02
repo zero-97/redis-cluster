@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import cn.hutool.core.date.DateUtil;
 import com.example.demo.service.IBitmapService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.JedisCluster;
 
@@ -19,6 +20,9 @@ public class BitmapServiceImpl implements IBitmapService {
     @Autowired
     private JedisCluster jedisCluster;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
     @Override
     public Boolean login(String id) {
         Date now = DateUtil.date();
@@ -26,6 +30,8 @@ public class BitmapServiceImpl implements IBitmapService {
 
         String key = LOGIN_SIGN+":"+id+":"+yearMonth;
         long offset = DateUtil.dayOfMonth(now)-1;
+
+        redisTemplate.opsForValue().setBit(key, offset, true);
 
         return jedisCluster.setbit(key, offset, true);
     }

@@ -28,6 +28,7 @@ public class RedisConfig {
         // 设置支持事物
         redisTemplate.setEnableTransactionSupport(true);
         redisTemplate.afterPropertiesSet();
+
         return redisTemplate;
     }
 }

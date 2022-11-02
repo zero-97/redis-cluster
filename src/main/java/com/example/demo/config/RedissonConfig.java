@@ -26,7 +26,19 @@ public class RedissonConfig {
     @Value(value = "${redisson.timeout}")
     private int timeout;
 
-    @Bean
+    @Value("${redisson.max-active}")
+    private Integer maxActive;
+
+    @Value("${redisson.max-wait}")
+    private Long maxWait;
+
+    @Value("${redisson.max-idle}")
+    private Integer maxIdle;
+
+    @Value("${redisson.min-idle}")
+    private Integer minIdle;
+
+    @Bean(name = "redissonClient")
     public RedissonClient getRedisClient() {
         String[] nodes = address.split(",");
         for (int i = 0; i < nodes.length; i++) {
@@ -34,9 +46,11 @@ public class RedissonConfig {
         }
 
         Config config = new Config();
-        config.useClusterServers()
-                .setScanInterval(scanInterval)
-                .addNodeAddress(nodes).setRetryAttempts(retryAttempts).setTimeout(timeout);
+        config.useClusterServers()                  // 使用集群
+                .setScanInterval(scanInterval)      // 设置集群状态扫描时间
+                .addNodeAddress(nodes)              // 集群节点
+                .setRetryAttempts(retryAttempts)    // 命令失败重试次数
+                .setTimeout(timeout);               // 超时时间
         if (StringUtils.isNotEmpty(password)) {
             config.useClusterServers().setPassword(password);
         }

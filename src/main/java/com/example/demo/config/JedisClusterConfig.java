@@ -15,44 +15,47 @@ import java.util.Set;
 @ConditionalOnClass({ JedisCluster.class })
 public class JedisClusterConfig {
 
-    @Value("${redisson.address}")
-    private String clusterNodes;
+    @Value("${jedis-cluster.cluster.nodes}")
+    private String nodes;
 
-    @Value("${redisson.password}")
+    @Value("${jedis-cluster.cluster.password}")
     private String password;
 
-    @Value("${redisson.timeout}")
-    private Integer timeout;
+    @Value("${jedis-cluster.cluster.connection-timeout}")
+    private Integer connectionTimeout;
 
-    @Value("${redisson.timeout}")
-    private Integer commandTimeout;
+    @Value("${jedis-cluster.cluster.so-timeout}")
+    private Integer soTimeout;
 
-    @Value("${redisson.max-active}")
+    @Value("${jedis-cluster.pool.max-active}")
     private Integer maxActive;
 
-    @Value("${redisson.max-wait}")
+    @Value("${jedis-cluster.pool.max-wait}")
     private Long maxWait;
 
-    @Value("${redisson.max-idle}")
+    @Value("${jedis-cluster.pool.max-idle}")
     private Integer maxIdle;
 
-    @Value("${redisson.min-idle}")
+    @Value("${jedis-cluster.pool.min-idle}")
     private Integer minIdle;
 
 
     @Bean
     public JedisCluster getJedisCluster() {
 
-        String[] serverArray = clusterNodes.split(",");
+        String[] serverArray = nodes.split(",");
         Set<HostAndPort> nodes = new HashSet<>();
         for (String ipPort : serverArray) {
             String[] ipPortPair = ipPort.split(":");
-            nodes.add(new HostAndPort(ipPortPair[0].trim(), Integer.valueOf(ipPortPair[1].trim())));
+            nodes.add(new HostAndPort(ipPortPair[0].trim(), Integer.parseInt(ipPortPair[1].trim())));
         }
 
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxTotal(maxActive);
+        jedisPoolConfig.setMaxWaitMillis(maxWait);
         jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMinIdle(minIdle);
 
-        return new JedisCluster(nodes, timeout, commandTimeout, maxActive, password, jedisPoolConfig);
+        return new JedisCluster(nodes, connectionTimeout, soTimeout, maxActive, password, jedisPoolConfig);
     }
 }
