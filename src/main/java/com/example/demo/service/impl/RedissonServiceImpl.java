@@ -27,7 +27,7 @@ public class RedissonServiceImpl implements IRedissonService {
         // 2.占用锁
         boolean res = false;
         try {
-            res = lock.tryLock(0, 30, TimeUnit.SECONDS);
+            res = lock.tryLock(0, TimeUnit.SECONDS);
             if (res) {
                 try {
                     // 3.执行业务
@@ -49,7 +49,7 @@ public class RedissonServiceImpl implements IRedissonService {
 
     @Override
     public void set(String key, String value) {
-        RBucket<Object> bucket = redissonClient.getBucket(key);
+        RBucket<String> bucket = redissonClient.getBucket(key);
         bucket.set(value);
     }
 

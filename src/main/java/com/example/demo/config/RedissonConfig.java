@@ -46,6 +46,10 @@ public class RedissonConfig {
         }
 
         Config config = new Config();
+
+        // 不进行配置，会出现异常：Only 0 of 2 slaves were synced
+        config = config.setCheckLockSyncedSlaves(false);
+
         config.useClusterServers()                  // 使用集群
                 .setScanInterval(scanInterval)      // 设置集群状态扫描时间
                 .addNodeAddress(nodes)              // 集群节点
