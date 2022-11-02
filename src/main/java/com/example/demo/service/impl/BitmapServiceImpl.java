@@ -3,12 +3,9 @@ package com.example.demo.service.impl;
 import cn.hutool.core.date.DateUtil;
 import com.example.demo.service.IBitmapService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisCluster;
+
 import java.util.Date;
 
 /**
@@ -20,9 +17,7 @@ public class BitmapServiceImpl implements IBitmapService {
     private final String LOGIN_SIGN = "login";
 
     @Autowired
-    @Qualifier("stringRedisTemplate")
-    private StringRedisTemplate redisTemplate;
-
+    private JedisCluster jedisCluster;
 
     @Override
     public Boolean login(String id) {
@@ -32,7 +27,7 @@ public class BitmapServiceImpl implements IBitmapService {
         String key = LOGIN_SIGN+":"+id+":"+yearMonth;
         long offset = DateUtil.dayOfMonth(now)-1;
 
-        return redisTemplate.opsForValue().setBit(key, offset, true);
+        return jedisCluster.setbit(key, offset, true);
     }
 
     @Override
@@ -43,7 +38,7 @@ public class BitmapServiceImpl implements IBitmapService {
         String key = LOGIN_SIGN+":"+id+":"+yearMonth;
         long offset = DateUtil.dayOfMonth(now)-1;
 
-        return redisTemplate.opsForValue().getBit(key, offset);
+        return jedisCluster.getbit(key, offset);
     }
 
     @Override
@@ -56,13 +51,13 @@ public class BitmapServiceImpl implements IBitmapService {
         long staOffset = DateUtil.dayOfMonth(sta)-1;
         long endOffset = DateUtil.dayOfMonth(end)-1;
 
-        return redisTemplate.execute((RedisCallback<Long>) con-> con.bitCount(key.getBytes(), staOffset, endOffset));
+        return jedisCluster.bitcount(key, staOffset, endOffset);
     }
 
     @Override
     public Long loginMonth(String id, String yearMonth) {
         String key = LOGIN_SIGN+":"+id+":"+yearMonth;
-        return redisTemplate.execute((RedisCallback<Long>) con-> con.bitCount(key.getBytes()));
+        return jedisCluster.bitcount(key);
     }
 
     @Override

@@ -3,6 +3,8 @@ server:
 
 spring:
   redis:
+#    host: 127.0.0.1
+#    port: 6379
     cluster:
       nodes:
         - 120.25.219.234:9001
@@ -36,3 +38,8 @@ redisson:
   retryAttempts: 5
   #超时时间
   timeout: 10000
+
+  max-active: 8   #连接池最大连接数
+  max-wait: -1    #连接池最大阻塞等待时间
+  max-idle: 8     #连接池中的最大空闲连接数
+  min-idle: 0     #连接池中的最小空闲连接数
