@@ -3,7 +3,7 @@ package com.example.demo.service;
 /**
  * @author yuanqizhang
  */
-public interface IBitmapService {
+public interface IJedisClusterService {
 
     Boolean login(String id);
 

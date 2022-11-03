@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.service.IBitmapService;
+import com.example.demo.service.IJedisClusterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yuanqizhang
  */
 @RestController
-@RequestMapping("/redis/bitmap")
-public class BitmapController {
+@RequestMapping("/redis/jedisCluster")
+public class JedisClusterController {
 
     @Autowired
-    private IBitmapService service;
+    private IJedisClusterService service;
 
     /**
      *

@@ -43,4 +43,31 @@ public class RedissonController {
     public String get(@RequestParam String key){
         return service.get(key);
     }
+
+    /**
+     *
+     * @param
+     */
+    @GetMapping("login")
+    public Boolean login(@RequestParam String id){
+        return service.login(id);
+    }
+
+    /**
+     *
+     * @param
+     */
+    @GetMapping("loginDay")
+    public Boolean loginDay(@RequestParam String id, @RequestParam String date){
+        return service.loginDay(id, date);
+    }
+
+    /**
+     *
+     * @param
+     */
+    @GetMapping("loginToday")
+    public boolean loginToday(@RequestParam String id){
+        return service.loginToday(id);
+    }
 }

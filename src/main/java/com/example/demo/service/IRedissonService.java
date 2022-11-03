@@ -10,4 +10,10 @@ public interface IRedissonService {
     void set(String key, String value);
 
     String get(String key);
+
+    boolean login(String id);
+
+    boolean loginDay(String id, String date);
+
+    boolean loginToday(String id);
 }

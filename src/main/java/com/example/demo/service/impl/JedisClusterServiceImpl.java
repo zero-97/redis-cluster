@@ -1,8 +1,9 @@
 package com.example.demo.service.impl;
 
 import cn.hutool.core.date.DateUtil;
-import com.example.demo.service.IBitmapService;
+import com.example.demo.service.IJedisClusterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.JedisCluster;
 
@@ -12,11 +13,12 @@ import java.util.Date;
  * @author yuanqizhang
  */
 @Service
-public class BitmapServiceImpl implements IBitmapService {
+public class JedisClusterServiceImpl implements IJedisClusterService {
 
     private final String LOGIN_SIGN = "login";
 
     @Autowired
+    @Qualifier("jedisCluster")
     private JedisCluster jedisCluster;
 
     @Override
